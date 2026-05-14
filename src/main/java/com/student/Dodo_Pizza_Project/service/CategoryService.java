@@ -3,6 +3,7 @@ package com.student.Dodo_Pizza_Project.service;
 import com.student.Dodo_Pizza_Project.entity.Category;
 import com.student.Dodo_Pizza_Project.repository.CategoryRepository;
 import com.student.Dodo_Pizza_Project.dto.CategoryDTO;
+import com.student.Dodo_Pizza_Project.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +15,13 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
 
         return categories.stream()
-                .map(this::convertToDTO)
+                .map(categoryMapper::toDTO)
                 .collect(Collectors.toList());
-    }
-
-    private CategoryDTO convertToDTO(Category category) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId(category.getId());
-        dto.setName(category.getName() != null ? category.getName() : "Без названия");
-        return dto;
     }
 }
