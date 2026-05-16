@@ -1,0 +1,24 @@
+services:
+  db:  # <--- ВОТ ЭТО ИМЯ (сервис базы)
+    image: postgres:15-alpine
+    container_name: dodo-db
+    environment:
+      POSTGRES_DB: dodo-pizza-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: satorugod1
+    ports:
+      - "5433:5432"
+
+  app:
+    build: .
+    container_name: dodo-app
+    ports:
+      - "8080:8081"
+    environment:
+      - DB_HOST=db  # <--- ССЫЛАЕМСЯ НА ИМЯ СЕРВИСА ВЫШЕ
+      - DB_PORT=5432
+      - DB_NAME=dodo-pizza-db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=satorugod1
+    depends_on:
+      - db

@@ -19,12 +19,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping
-    @Operation(summary = "Получить все продукты", description = "Возвращает список всех доступных товаров с их категориями")
-    public List<ProductDTO> getAll() {
-        return productService.getAllProducts();
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Найти продукт по ID", description = "Возвращает данные одного продукта. Если ID не существует, бросает 404.")
     public ProductDTO getById(@PathVariable Long id) {
@@ -49,5 +43,19 @@ public class ProductController {
     @Operation(summary = "Удалить продукт", description = "Удаляет запись о продукте из базы данных")
     public void delete(@PathVariable Long id) {
         productService.deleteProduct(id);
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "Получить все продукты с пагинацией и сортировкой",
+            description = "Возвращает порцию товаров. Можно указать поле для сортировки (например, price) и направление (asc/desc)"
+    )
+    public List<ProductDTO> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return productService.getAllProducts(page, size, sortBy, sortDir);
     }
 }

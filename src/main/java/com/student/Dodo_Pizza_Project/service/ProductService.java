@@ -5,10 +5,16 @@ import com.student.Dodo_Pizza_Project.dto.ProductDTO;
 import java.util.List;
 
 public interface ProductService {
-        ProductDTO createProduct(ProductDTO dto);
-        ProductDTO getProductById(Long id);
-        List<ProductDTO> getAllProducts();
-        ProductDTO updateProduct(Long id, ProductDTO dto);
-        void deleteProduct(Long id);
+    ProductDTO createProduct(ProductDTO dto);
+
+    ProductDTO getProductById(Long id);
+
+    List<ProductDTO> getAllProducts(int page, int size);
+
+    ProductDTO updateProduct(Long id, ProductDTO dto);
+
+    void deleteProduct(Long id);
+
+    List<ProductDTO> getAllProducts(int page, int size, String sortBy, String sortDir);
 
 }

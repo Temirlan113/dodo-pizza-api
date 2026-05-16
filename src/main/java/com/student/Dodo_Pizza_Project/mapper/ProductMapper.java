@@ -13,6 +13,7 @@ public interface ProductMapper {
     ProductDTO toDTO(Product product);
 
     @Mapping(target = "category", ignore = true)
+    @Mapping(target = "active", ignore = true)
     Product toEntity(ProductDTO dto);
 
     List<ProductDTO> toDTOList(List<Product> products);

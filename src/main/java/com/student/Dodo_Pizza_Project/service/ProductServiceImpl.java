@@ -8,10 +8,16 @@ import com.student.Dodo_Pizza_Project.repository.CategoryRepository;
 import com.student.Dodo_Pizza_Project.repository.ProductRepository;
 import com.student.Dodo_Pizza_Project.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -23,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductDTO createProduct(ProductDTO dto) {
+        log.info("Запрос на создание нового продукта: {}", dto.getName());
         Product product = productMapper.toEntity(dto);
 
         if (dto.getCategoryName() != null) {
@@ -31,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
         }
         Product savedProduct = productRepository.save(product);
+        log.info("Продукт успешно создан с ID: {}", savedProduct.getId());
         return productMapper.toDTO(savedProduct);
     }
 
@@ -69,9 +77,28 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
+
     @Override
-    public List<ProductDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return productMapper.toDTOList(products);
+    public List<ProductDTO> getAllProducts(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        return productMapper.toDTOList(productPage.getContent());
+    }
+
+    @Override
+    public List<ProductDTO> getAllProducts(int page, int size, String sortBy, String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.DESC.name())
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        return productMapper.toDTOList(productPage.getContent());
     }
 }
