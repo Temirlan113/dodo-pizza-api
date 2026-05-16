@@ -10,4 +10,6 @@
 
     <include file="db/changelog/changeset/002-create-products-table.sql" relativeToChangelogFile="false"/>
 
+    <include file="db/changelog/changeset/003_add_orders_table.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

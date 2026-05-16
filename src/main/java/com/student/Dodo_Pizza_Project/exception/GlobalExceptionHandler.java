@@ -54,4 +54,18 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // Ловим ошибки бизнес-логики (дубликаты имен, неверные цены по категориям)
+    @ExceptionHandler({BadRequestException.class, InvalidProductPriceException.class})
+    public ResponseEntity<ErrorResponseDTO> handleBusinessExceptions(RuntimeException ex) {
+        // Логируем как предупреждение, так как это ошибка в данных клиента
+        log.warn("Нарушение бизнес-логики: {}", ex.getMessage());
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(), // Сюда передастся текст "Цена пиццы не может быть ниже..."
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

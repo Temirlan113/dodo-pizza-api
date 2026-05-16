@@ -18,12 +18,12 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
 
     private String name;
     private BigDecimal price;
-    private boolean isActive;
+    private boolean active = true;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
